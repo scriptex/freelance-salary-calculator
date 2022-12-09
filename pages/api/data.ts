@@ -1,12 +1,14 @@
+import { join, resolve } from 'node:path';
 import { promises as fs } from 'node:fs';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { Data } from './types';
+import { API_REQUEST_URL } from './constants';
 import { shouldRequestFreshData } from './helpers';
-import { FILE_PATH, API_REQUEST_URL } from './constants';
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse<Data>) {
+	const FILE_PATH = resolve(join(process.cwd(), 'json'), 'currencies.json');
 	const data = await fs.readFile(FILE_PATH, {
 		encoding: 'utf8'
 	});
