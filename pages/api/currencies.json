@@ -1,0 +1,11 @@
+{
+	"timestamp": "2022-12-09T11:05:31.519Z",
+	"data": {
+		"meta": { "last_updated_at": "2022-12-08T23:59:59Z" },
+		"data": {
+			"EUR": { "code": "EUR", "value": 0.511217 },
+			"GBP": { "code": "GBP", "value": 0.441172 },
+			"USD": { "code": "USD", "value": 0.539761 }
+		}
+	}
+}
