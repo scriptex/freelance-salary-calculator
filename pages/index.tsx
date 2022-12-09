@@ -1,24 +1,39 @@
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
+import List from '@mui/material/List';
+import Avatar from '@mui/material/Avatar';
 import Switch from '@mui/material/Switch';
 import format from 'date-fns/format';
 import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
 import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/system/Container';
 import Typography from '@mui/material/Typography';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useEffect, useState, useMemo } from 'react';
 
-import type { Data } from 'pages/api/types';
-import { Field, Result, Converter } from 'components';
+import { Field } from 'components';
+import { Currency, CurrencySymbol, Data } from 'pages/api/types';
+
+const convert = (data: Data['data'], value: number, currency: Currency): string => {
+	const currencyValue = data?.data?.[currency]?.value;
+
+	if (!currencyValue) {
+		return '';
+	}
+
+	return Math.round(value * currencyValue).toString();
+};
 
 export default function Home() {
 	const [type, setType] = useState<'hourly' | 'yearly'>('hourly');
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
 	const [insurance, setInsurance] = useState<number | undefined>(3400);
-	const [currencyData, setCurrencyData] = useState<Data | undefined>();
+	const [currencyData, setCurrencyData] = useState<Data['data']>({});
 	const [hoursInMonth, setHoursInMonth] = useState(Math.round(((365 - 52 * 2 - 20 - 12) / 12) * 8));
 	const [advancedMode, setAdvancedMode] = useState(false);
 
@@ -51,7 +66,7 @@ export default function Home() {
 
 		fetch('/api/data', { signal })
 			.then(r => r.json())
-			.then((d: Data) => setCurrencyData(d));
+			.then((d: Data) => setCurrencyData(d.data));
 
 		return () => {
 			abortController.abort();
@@ -114,21 +129,20 @@ export default function Home() {
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
 					<Grid item xs={12} sm={6} md={4}>
 						{type === 'hourly' && (
-							<Field id="hour-rate" label="Часова ставка" value={hourRate} onChange={setHourRate} />
+							<Field label="Часова ставка" value={hourRate} suffix="лв." onChange={setHourRate} />
 						)}
 
 						{type === 'yearly' && (
-							<Field id="year-rate" label="Годишна заплата" value={yearRate} onChange={setYearRate} />
+							<Field label="Годишна заплата" value={yearRate} suffix="лв." onChange={setYearRate} />
 						)}
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={4}>
-						<Field id="insurance" label="Осигурителен праг" value={insurance} onChange={setInsurance} />
+						<Field label="Осигурителен праг" value={insurance} suffix="лв." onChange={setInsurance} />
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={4}>
 						<Field
-							id="hours-in-month"
 							label="Работни часове за един месец"
 							value={hoursInMonth}
 							disabled={!advancedMode}
@@ -146,38 +160,93 @@ export default function Home() {
 								Резултати
 							</Typography>
 
-							<Result title="Нетна заплата: " value={netSalary} />
+							<List>
+								<ListItem disableGutters>
+									<ListItemText primary="Нетна заплата: " secondary={`${netSalary} лв.`} />
+								</ListItem>
 
-							<Result title="Признати разходи (25%): " value={expenses} />
+								<ListItem disableGutters>
+									<ListItemText primary="Признати разходи (25%): " secondary={`${expenses} лв.`} />
+								</ListItem>
 
-							<Result title="Осигуровки (27.8%): " value={insuranceAmount} />
+								<ListItem disableGutters>
+									<ListItemText primary="Осигуровки (27.8%): " secondary={`${insuranceAmount} лв.`} />
+								</ListItem>
 
-							<Result title="Данъчна основа за тримесечие: " value={quarterlyTaxGround} />
+								<ListItem disableGutters>
+									<ListItemText
+										primary="Данъчна основа за тримесечие: "
+										secondary={`${quarterlyTaxGround} лв.`}
+									/>
+								</ListItem>
 
-							<Result title="Данък за тримесечие: " value={quarterlyTax} />
+								<ListItem disableGutters>
+									<ListItemText primary="Данък за тримесечие: " secondary={`${quarterlyTax} лв.`} />
+								</ListItem>
+							</List>
 						</Grid>
 
 						<Grid item xs={12} sm={6}>
 							<Typography variant="h5" marginBottom={2}>
-								Остатък на месец:{' '}
+								Остатък на месец:
 							</Typography>
 
-							<Result value={salary}></Result>
+							<List>
+								<ListItem disableGutters>
+									<ListItemAvatar>
+										<Avatar>ЛВ</Avatar>
+									</ListItemAvatar>
 
-							<Converter data={currencyData} value={salary} currency="EUR" />
+									<ListItemText primary="В лева" secondary={salary}></ListItemText>
+								</ListItem>
 
-							<Converter data={currencyData} value={salary} currency="USD" />
+								<ListItem disableGutters>
+									<ListItemAvatar>
+										<Avatar>{CurrencySymbol.EUR}</Avatar>
+									</ListItemAvatar>
 
-							<Converter data={currencyData} value={salary} currency="GBP" />
+									<ListItemText
+										primary="В евро"
+										secondary={convert(currencyData, salary, 'EUR')}
+									></ListItemText>
+								</ListItem>
 
-							{currencyData?.data?.meta?.last_updated_at && (
-								<Typography marginBottom={1} fontSize={12}>
-									<em>
-										Валутните курсове са обновени на{' '}
-										{format(new Date(currencyData.data.meta.last_updated_at), 'dd MMM yyyy, HH:mm')}
-									</em>
-								</Typography>
-							)}
+								<ListItem disableGutters>
+									<ListItemAvatar>
+										<Avatar>{CurrencySymbol.USD}</Avatar>
+									</ListItemAvatar>
+
+									<ListItemText
+										primary="В долари"
+										secondary={convert(currencyData, salary, 'USD')}
+									></ListItemText>
+								</ListItem>
+
+								<ListItem disableGutters>
+									<ListItemAvatar>
+										<Avatar>{CurrencySymbol.GBP}</Avatar>
+									</ListItemAvatar>
+
+									<ListItemText
+										primary="В британски лири"
+										secondary={convert(currencyData, salary, 'GBP')}
+									></ListItemText>
+								</ListItem>
+
+								{currencyData?.meta?.last_updated_at && (
+									<ListItem disableGutters>
+										<Typography marginBottom={1} fontSize={12}>
+											<em>
+												Валутните курсове са обновени на{' '}
+												{format(
+													new Date(currencyData.meta.last_updated_at),
+													'dd MMM yyyy, HH:mm'
+												)}
+											</em>
+										</Typography>
+									</ListItem>
+								)}
+							</List>
 						</Grid>
 					</Grid>
 				)}

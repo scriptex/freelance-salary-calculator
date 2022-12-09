@@ -14,9 +14,9 @@ export type CurrencyData = {
 export type Data = {
 	timestamp?: string;
 	data?: {
-		meta: {
-			last_updated_at: string;
+		meta?: {
+			last_updated_at?: string;
 		};
-		data: Record<Currency, CurrencyData>;
+		data?: Record<Currency, CurrencyData>;
 	};
 };
