@@ -1,3 +1,7 @@
+import { useEffect, useState, useMemo } from 'react';
+
+import Head from 'next/head';
+
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
@@ -13,9 +17,8 @@ import Typography from '@mui/material/Typography';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useEffect, useState, useMemo } from 'react';
 
-import { Field } from 'components';
+import { Info, Field } from 'components';
 import { Currency, CurrencySymbol, Data } from 'pages/api/types';
 
 const convert = (data: Data['data'], value: number, currency: Currency): string => {
@@ -75,6 +78,10 @@ export default function Home() {
 
 	return (
 		<Container>
+			<Head>
+				<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+			</Head>
+
 			<Box marginTop={10}>
 				<Typography variant="h4" marginBottom={1} textAlign="center">
 					Калкулатор за заплата на фрийлансър/контрактор
@@ -95,11 +102,16 @@ export default function Home() {
 
 				<Divider style={{ margin: '50px 0' }} />
 
-				<Typography variant="h5">Входни данни:</Typography>
+				<Typography variant="h5" marginBottom={2}>
+					Входни данни:
+				</Typography>
 
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
 					<Grid item xs={12} sm={6} md={3}>
-						<Typography>Тип на калкулациите</Typography>
+						<Typography>
+							База на калкулациите{' '}
+							<Info text="Възможни са два варианта: Калкулация базирана на часова ставка или на годишна база." />
+						</Typography>
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={3}>
@@ -118,10 +130,15 @@ export default function Home() {
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							control={
-								<Checkbox checked={advancedMode} onChange={() => setAdvancedMode(!advancedMode)} />
-							}
 							label="Редакция на работните часове за един месец"
+							control={
+								<>
+									<Checkbox checked={advancedMode} onChange={() => setAdvancedMode(!advancedMode)} />
+
+									<Info text="При 8 (осем) часов работен ден на базата на 365 дни в годината минус 52 уикенда, 20 дни отпуск и 12 национални празника. (365 - 52*2 - 20 - 12) / 12 * 8" />
+								</>
+							}
+							labelPlacement="start"
 						/>
 					</Grid>
 				</Grid>
@@ -151,18 +168,16 @@ export default function Home() {
 					</Grid>
 				</Grid>
 
-				<Divider style={{ margin: '20px 0' }} />
+				<Divider style={{ margin: '20px 0 50px' }} />
 
 				{!ratePerHour ? null : (
 					<Grid container spacing={2} marginBottom={2}>
 						<Grid item xs={12} sm={6}>
-							<Typography variant="h5" marginBottom={2}>
-								Резултати
-							</Typography>
+							<Typography variant="h5">Резултати</Typography>
 
 							<List>
 								<ListItem disableGutters>
-									<ListItemText primary="Нетна заплата: " secondary={`${netSalary} лв.`} />
+									<ListItemText primary="Брутна заплата: " secondary={`${netSalary} лв.`} />
 								</ListItem>
 
 								<ListItem disableGutters>
@@ -187,9 +202,7 @@ export default function Home() {
 						</Grid>
 
 						<Grid item xs={12} sm={6}>
-							<Typography variant="h5" marginBottom={2}>
-								Остатък на месец:
-							</Typography>
+							<Typography variant="h5">Остатък на месец:</Typography>
 
 							<List>
 								<ListItem disableGutters>

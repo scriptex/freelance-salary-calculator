@@ -27,6 +27,7 @@
 		"@emotion/react": "11.10.5",
 		"@emotion/styled": "11.10.5",
 		"@fontsource/roboto": "4.5.8",
+		"@mui/icons-material": "^5.10.16",
 		"@mui/material": "5.10.17",
 		"@types/date-fns": "2.6.0",
 		"@types/node": "18.11.12",
