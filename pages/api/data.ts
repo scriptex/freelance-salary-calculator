@@ -12,9 +12,6 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse<Cu
 
 	let data: CurrencyAPIData | null = await collection.findOne<CurrencyAPIData>({ type: 'apiData' });
 
-	console.log(data);
-	console.log(shouldRequestFreshData(data?.timestamp));
-
 	if (shouldRequestFreshData(data?.timestamp)) {
 		const apiData = await fetch(API_REQUEST_URL)
 			.then(r => r.json())
