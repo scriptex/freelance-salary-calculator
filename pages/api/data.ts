@@ -17,11 +17,21 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse<Cu
 			.then(r => r.json())
 			.catch(() => ({}));
 
-		collection.insertOne({
-			...apiData,
-			type: 'apiData',
-			timestamp: new Date().toISOString()
-		});
+		if (!data) {
+			collection.insertOne({
+				...apiData,
+				type: 'apiData',
+				timestamp: new Date().toISOString()
+			});
+		} else {
+			collection.updateOne(
+				{ type: 'apiData' },
+				{
+					...apiData,
+					timestamp: new Date().toISOString()
+				}
+			);
+		}
 
 		data = apiData;
 	}
