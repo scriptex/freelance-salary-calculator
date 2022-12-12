@@ -21,13 +21,18 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"prettier:ts": "prettier --write --list-different \"**/*.tsx\" \"**/*.ts\"",
+		"prettier:js": "prettier --write --list-different \"**/*.js\"",
+		"prettier:json": "prettier --write --list-different \"**/*.json\"",
+		"prettier": "yarn prettier:ts && yarn prettier:js && yarn prettier:json"
 	},
 	"dependencies": {
+		"@babel/core": "7.20.5",
 		"@emotion/react": "11.10.5",
 		"@emotion/styled": "11.10.5",
 		"@fontsource/roboto": "4.5.8",
-		"@mui/icons-material": "^5.10.16",
+		"@mui/icons-material": "5.10.16",
 		"@mui/material": "5.10.17",
 		"@types/date-fns": "2.6.0",
 		"@types/node": "18.11.13",
@@ -36,8 +41,10 @@
 		"date-fns": "2.29.3",
 		"eslint": "8.29.0",
 		"eslint-config-next": "13.0.6",
+		"mongodb": "4.12.1",
 		"next": "13.0.6",
 		"normalize.css": "8.0.1",
+		"prettier": "^2.8.1",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"typescript": "4.9.4"

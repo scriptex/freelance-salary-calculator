@@ -1,29 +1,40 @@
-import { resolve } from 'node:path';
-import { promises as fs } from 'node:fs';
-
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { Data } from './types';
-import { currencyData } from './currencies';
+import clientPromise from 'lib/mongodb';
+import { CurrencyAPIData } from './types';
 import { API_REQUEST_URL } from './constants';
 import { shouldRequestFreshData } from './helpers';
 
-export default async function handler(_: NextApiRequest, res: NextApiResponse<Data>) {
-	let parsedData: Data = currencyData as Data;
+export default async function handler(_: NextApiRequest, res: NextApiResponse<CurrencyAPIData>) {
+	const client = await clientPromise;
+	const db = client.db('currencies');
+	const collection = db.collection('currencies');
 
-	if (shouldRequestFreshData(parsedData.timestamp)) {
+	let data: CurrencyAPIData | null = await collection.findOne<CurrencyAPIData>({ type: 'apiData' });
+
+	if (shouldRequestFreshData(data?.timestamp)) {
 		const apiData = await fetch(API_REQUEST_URL)
 			.then(r => r.json())
 			.catch(() => ({}));
 
-		await fs.writeFile(
-			resolve(__dirname, 'currencies.js'),
-			`export const currencyData = ${apiData};
-export default currencyData;`
-		);
+		if (!data) {
+			collection.insertOne({
+				...apiData,
+				type: 'apiData',
+				timestamp: new Date().toISOString()
+			});
+		} else {
+			collection.updateOne(
+				{ type: 'apiData' },
+				{
+					...apiData,
+					timestamp: new Date().toISOString()
+				}
+			);
+		}
 
-		parsedData = apiData;
+		data = apiData;
 	}
 
-	res.status(200).json(parsedData);
+	res.status(200).json(data || {});
 }
