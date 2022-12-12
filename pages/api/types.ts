@@ -11,12 +11,11 @@ export type CurrencyData = {
 	value: number;
 };
 
-export type Data = {
-	timestamp?: string;
-	data?: {
-		meta?: {
-			last_updated_at?: string;
-		};
-		data?: Record<Currency, CurrencyData>;
+export type CurrencyAPIData = {
+	meta?: {
+		last_updated_at?: string;
 	};
+	type?: 'apiData';
+	data?: Record<Currency, CurrencyData>;
+	timestamp?: string;
 };

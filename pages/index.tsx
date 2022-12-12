@@ -18,10 +18,28 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import clientPromise from 'lib/mongodb';
 import { Info, Field } from 'components';
-import { Currency, CurrencySymbol, Data } from 'pages/api/types';
+import { InferGetServerSidePropsType } from 'next';
+import { Currency, CurrencySymbol, CurrencyAPIData } from 'pages/api/types';
 
-const convert = (data: Data['data'], value: number, currency: Currency): string => {
+export async function getServerSideProps(context?: unknown) {
+	try {
+		await clientPromise;
+
+		return {
+			props: { isConnected: true }
+		};
+	} catch (e) {
+		console.error(e);
+
+		return {
+			props: { isConnected: false }
+		};
+	}
+}
+
+const convert = (data: CurrencyAPIData, value: number, currency: Currency): string => {
 	const currencyValue = data?.data?.[currency]?.value;
 
 	if (!currencyValue) {
@@ -31,12 +49,12 @@ const convert = (data: Data['data'], value: number, currency: Currency): string 
 	return Math.round(value * currencyValue).toString();
 };
 
-export default function Home() {
+export default function Home({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	const [type, setType] = useState<'hourly' | 'yearly'>('hourly');
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
 	const [insurance, setInsurance] = useState<number | undefined>(3400);
-	const [currencyData, setCurrencyData] = useState<Data['data']>({});
+	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
 	const [hoursInMonth, setHoursInMonth] = useState(Math.round(((365 - 52 * 2 - 20 - 12) / 12) * 8));
 	const [advancedMode, setAdvancedMode] = useState(false);
 
@@ -69,7 +87,7 @@ export default function Home() {
 
 		fetch('/api/data', { signal })
 			.then(r => r.json())
-			.then((d: Data) => setCurrencyData(d.data));
+			.then(setCurrencyData);
 
 		return () => {
 			abortController.abort();
