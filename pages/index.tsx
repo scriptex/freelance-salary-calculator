@@ -18,9 +18,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemText from '@mui/material/ListItemText';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+import Script from 'next/script';
+import { InferGetServerSidePropsType } from 'next';
+
 import clientPromise from 'lib/mongodb';
 import { Info, Field } from 'components';
-import { InferGetServerSidePropsType } from 'next';
 import { Currency, CurrencySymbol, CurrencyAPIData } from 'pages/api/types';
 
 export async function getServerSideProps(context?: unknown) {
@@ -97,10 +99,24 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 	return (
 		<Container>
 			<Head>
-				<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+				<link
+					rel="stylesheet"
+					href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
+				/>
 			</Head>
 
-			<Box marginTop={10}>
+			<a
+				href="https://github.com/scriptex/freelance-salary-calculator"
+				title="See code on Github"
+				className="github-fork-ribbon"
+				data-ribbon="See code on Github"
+			>
+				See code on Github
+			</a>
+
+			<Box marginTop={10} style={{ minHeight: 'calc(100vh - 5rem)' }}>
 				<Typography variant="h4" marginBottom={1} textAlign="center">
 					Калкулатор за заплата на фрийлансър/контрактор
 				</Typography>
@@ -118,7 +134,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 					</em>
 				</Typography>
 
-				<Divider style={{ margin: '50px 0' }} />
+				<Divider style={{ margin: '3rem 0' }} />
 
 				<Typography variant="h5" marginBottom={2}>
 					Входни данни:
@@ -186,102 +202,119 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 					</Grid>
 				</Grid>
 
-				<Divider style={{ margin: '20px 0 50px' }} />
+				<Divider style={{ margin: '2rem 0 3rem' }} />
 
 				{!ratePerHour ? null : (
-					<Grid container spacing={2} marginBottom={2}>
-						<Grid item xs={12} sm={6}>
-							<Typography variant="h5">Резултати</Typography>
+					<>
+						<Grid container spacing={2} marginBottom={2}>
+							<Grid item xs={12} sm={6}>
+								<Typography variant="h5">Резултати</Typography>
 
-							<List>
-								<ListItem disableGutters>
-									<ListItemText primary="Брутна заплата: " secondary={`${netSalary} лв.`} />
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemText primary="Признати разходи (25%): " secondary={`${expenses} лв.`} />
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemText primary="Осигуровки (27.8%): " secondary={`${insuranceAmount} лв.`} />
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemText
-										primary="Данъчна основа за тримесечие: "
-										secondary={`${quarterlyTaxGround} лв.`}
-									/>
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemText primary="Данък за тримесечие: " secondary={`${quarterlyTax} лв.`} />
-								</ListItem>
-							</List>
-						</Grid>
-
-						<Grid item xs={12} sm={6}>
-							<Typography variant="h5">Остатък на месец:</Typography>
-
-							<List>
-								<ListItem disableGutters>
-									<ListItemAvatar>
-										<Avatar>ЛВ</Avatar>
-									</ListItemAvatar>
-
-									<ListItemText primary="В лева" secondary={salary}></ListItemText>
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemAvatar>
-										<Avatar>{CurrencySymbol.EUR}</Avatar>
-									</ListItemAvatar>
-
-									<ListItemText
-										primary="В евро"
-										secondary={convert(currencyData, salary, 'EUR')}
-									></ListItemText>
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemAvatar>
-										<Avatar>{CurrencySymbol.USD}</Avatar>
-									</ListItemAvatar>
-
-									<ListItemText
-										primary="В долари"
-										secondary={convert(currencyData, salary, 'USD')}
-									></ListItemText>
-								</ListItem>
-
-								<ListItem disableGutters>
-									<ListItemAvatar>
-										<Avatar>{CurrencySymbol.GBP}</Avatar>
-									</ListItemAvatar>
-
-									<ListItemText
-										primary="В британски лири"
-										secondary={convert(currencyData, salary, 'GBP')}
-									></ListItemText>
-								</ListItem>
-
-								{currencyData?.meta?.last_updated_at && (
+								<List>
 									<ListItem disableGutters>
-										<Typography marginBottom={1} fontSize={12}>
-											<em>
-												Валутните курсове са обновени на{' '}
-												{format(
-													new Date(currencyData.meta.last_updated_at),
-													'dd MMM yyyy, HH:mm'
-												)}
-											</em>
-										</Typography>
+										<ListItemText primary="Брутна заплата: " secondary={`${netSalary} лв.`} />
 									</ListItem>
-								)}
-							</List>
+
+									<ListItem disableGutters>
+										<ListItemText
+											primary="Признати разходи (25%): "
+											secondary={`${expenses} лв.`}
+										/>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemText
+											primary="Осигуровки (27.8%): "
+											secondary={`${insuranceAmount} лв.`}
+										/>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemText
+											primary="Данъчна основа за тримесечие: "
+											secondary={`${quarterlyTaxGround} лв.`}
+										/>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemText
+											primary="Данък за тримесечие: "
+											secondary={`${quarterlyTax} лв.`}
+										/>
+									</ListItem>
+								</List>
+							</Grid>
+
+							<Grid item xs={12} sm={6}>
+								<Typography variant="h5">Остатък на месец:</Typography>
+
+								<List>
+									<ListItem disableGutters>
+										<ListItemAvatar>
+											<Avatar>ЛВ</Avatar>
+										</ListItemAvatar>
+
+										<ListItemText primary="В лева" secondary={salary}></ListItemText>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemAvatar>
+											<Avatar>{CurrencySymbol.EUR}</Avatar>
+										</ListItemAvatar>
+
+										<ListItemText
+											primary="В евро"
+											secondary={convert(currencyData, salary, 'EUR')}
+										></ListItemText>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemAvatar>
+											<Avatar>{CurrencySymbol.USD}</Avatar>
+										</ListItemAvatar>
+
+										<ListItemText
+											primary="В долари"
+											secondary={convert(currencyData, salary, 'USD')}
+										></ListItemText>
+									</ListItem>
+
+									<ListItem disableGutters>
+										<ListItemAvatar>
+											<Avatar>{CurrencySymbol.GBP}</Avatar>
+										</ListItemAvatar>
+
+										<ListItemText
+											primary="В британски лири"
+											secondary={convert(currencyData, salary, 'GBP')}
+										></ListItemText>
+									</ListItem>
+
+									{currencyData?.meta?.last_updated_at && (
+										<ListItem disableGutters>
+											<Typography marginBottom={1} fontSize={12}>
+												<em>
+													Валутните курсове са обновени на{' '}
+													{format(
+														new Date(currencyData.meta.last_updated_at),
+														'dd MMM yyyy, HH:mm'
+													)}
+												</em>
+											</Typography>
+										</ListItem>
+									)}
+								</List>
+							</Grid>
 						</Grid>
-					</Grid>
+
+						<Divider style={{ margin: '0 0 2rem' }} />
+					</>
 				)}
 			</Box>
+
+			<social-links style={{ display: 'block', paddingBottom: '2rem' }}></social-links>
+
+			<Script src="https://unpkg.com/scriptex-socials" />
 		</Container>
 	);
 }

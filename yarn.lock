@@ -3121,6 +3121,11 @@ scheduler@^0.23.0:
   dependencies:
     loose-envify "^1.1.0"
 
+scriptex-socials@1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/scriptex-socials/-/scriptex-socials-1.7.0.tgz#3e76af0d9e3cd47ff30bd7aba7b74c02d7caec40"
+  integrity sha512-4CrheGuwr8fUBWc1VCC9bu1vdjNfiX2MqVpKwmQoegv0D6Ha9Znyh2Gz0kVkRuwuXzfyOtW2h9dxKUHTKvpGlQ==
+
 semver@^6.3.0:
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-6.3.0.tgz#ee0a64c8af5e8ceea67687b133761e1becbd1d3d"
