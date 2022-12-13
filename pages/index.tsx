@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 
 import Head from 'next/head';
+import Image from 'next/image';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -98,6 +99,27 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 	return (
 		<Container>
+			<Image
+				src="/background.jpg"
+				alt="Photo by Carlos Muza on Unsplash"
+				width={2426}
+				height={1728}
+				style={{
+					position: 'fixed',
+					top: '50%',
+					left: '50%',
+					zIndex: -1,
+					opacity: 0.05,
+					width: 'auto',
+					height: 'auto',
+					minWidth: '100%',
+					minHeight: '100%',
+					maxWidth: 'none',
+					maxHeight: 'none',
+					transform: 'translate(-50%, -50%)'
+				}}
+			/>
+
 			<Head>
 				<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
@@ -116,7 +138,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				See code on Github
 			</a>
 
-			<Box marginTop={10} style={{ minHeight: 'calc(100vh - 5rem)' }}>
+			<Box marginTop={10} style={{ minHeight: 'calc(100vh - 9.75rem)', position: 'relative', zIndex: 2 }}>
 				<Typography variant="h4" marginBottom={1} textAlign="center">
 					Калкулатор за заплата на фрийлансър/контрактор
 				</Typography>
@@ -312,7 +334,9 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				)}
 			</Box>
 
-			<social-links style={{ display: 'block', paddingBottom: '2rem' }}></social-links>
+			<social-links
+				style={{ display: 'block', paddingBottom: '2rem', position: 'relative', zIndex: 2 }}
+			></social-links>
 
 			<Script src="https://unpkg.com/scriptex-socials" />
 		</Container>
