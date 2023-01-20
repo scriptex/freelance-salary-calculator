@@ -7,7 +7,7 @@ export function shouldRequestFreshData(timestamp?: string): boolean {
 	}
 
 	const now = new Date();
-	const date = addHours(new Date(timestamp), 4);
+	const date = addHours(new Date(timestamp), 24);
 
 	if (isAfter(now, date)) {
 		return true;
