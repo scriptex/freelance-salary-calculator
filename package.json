@@ -28,7 +28,7 @@
 		"prettier": "yarn prettier:ts && yarn prettier:js && yarn prettier:json"
 	},
 	"dependencies": {
-		"@babel/core": "7.20.12",
+		"@babel/core": "7.21.0",
 		"@emotion/react": "11.10.6",
 		"@emotion/styled": "11.10.6",
 		"@fontsource/roboto": "4.5.8",
