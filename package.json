@@ -33,7 +33,7 @@
 		"@emotion/styled": "11.10.6",
 		"@fontsource/roboto": "4.5.8",
 		"@mui/icons-material": "5.11.11",
-		"@mui/material": "5.11.12",
+		"@mui/material": "5.11.13",
 		"@types/date-fns": "2.6.0",
 		"@types/node": "18.15.3",
 		"@types/react": "18.0.28",
