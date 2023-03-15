@@ -24,7 +24,7 @@ import { InferGetServerSidePropsType } from 'next';
 
 import clientPromise from 'lib/mongodb';
 import { Info, Field } from 'components';
-import { Currency, CurrencySymbol, CurrencyAPIData } from 'pages/api/types';
+import { Currency, CurrencySymbol, CurrencyAPIData } from 'shared';
 
 export async function getServerSideProps(context?: unknown) {
 	try {

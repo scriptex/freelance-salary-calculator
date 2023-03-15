@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import clientPromise from 'lib/mongodb';
-import { CurrencyAPIData } from './types';
-import { API_REQUEST_URL } from './constants';
-import { shouldRequestFreshData } from './helpers';
+import { API_REQUEST_URL, CurrencyAPIData, shouldRequestFreshData } from 'shared';
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse<CurrencyAPIData>) {
 	const client = await clientPromise;

@@ -18,6 +18,7 @@
 		"paths": {
 			"data": ["data"],
 			"pages": ["pages"],
+			"shared": ["shared"],
 			"components": ["components"]
 		}
 	},
