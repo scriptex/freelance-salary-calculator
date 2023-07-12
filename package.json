@@ -43,7 +43,7 @@
 		"scriptex-socials": "1.7.0"
 	},
 	"devDependencies": {
-		"@babel/core": "7.22.8",
+		"@babel/core": "7.22.9",
 		"@types/date-fns": "2.6.0",
 		"@types/node": "20.4.1",
 		"@types/react": "18.2.14",
