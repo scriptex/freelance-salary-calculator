@@ -35,7 +35,7 @@
 		"@mui/icons-material": "5.14.3",
 		"@mui/material": "5.14.5",
 		"date-fns": "2.30.0",
-		"mongodb": "5.8.0",
+		"mongodb": "5.8.1",
 		"next": "13.4.19",
 		"normalize.css": "8.0.1",
 		"react": "18.2.0",
