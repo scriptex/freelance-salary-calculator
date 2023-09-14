@@ -1,30 +1,35 @@
+import format from 'date-fns/format';
 import { useEffect, useState, useMemo } from 'react';
 
 import Head from 'next/head';
 import Image from 'next/image';
+import Script from 'next/script';
+import type { InferGetServerSidePropsType } from 'next';
 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Link from '@mui/material/Link';
 import List from '@mui/material/List';
 import Avatar from '@mui/material/Avatar';
+import Select from '@mui/material/Select';
 import Switch from '@mui/material/Switch';
-import format from 'date-fns/format';
 import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import Checkbox from '@mui/material/Checkbox';
+import MenuItem from '@mui/material/MenuItem';
 import Container from '@mui/system/Container';
+import InputLabel from '@mui/material/InputLabel';
 import Typography from '@mui/material/Typography';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
+import FormControl from '@mui/material/FormControl';
 import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
-import Script from 'next/script';
-import { InferGetServerSidePropsType } from 'next';
 
 import clientPromise from 'lib/mongodb';
 import { Info, Field } from 'components';
 import { Currency, CurrencySymbol, CurrencyAPIData } from 'shared';
+
+type ExtendedCurrency = Currency | 'BGN';
 
 export async function getServerSideProps(context?: unknown) {
 	try {
@@ -52,8 +57,23 @@ const convert = (data: CurrencyAPIData, value: number, currency: Currency): stri
 	return Math.round(value * currencyValue).toString();
 };
 
+const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency): number => {
+	if (currency === 'BGN') {
+		return value;
+	}
+
+	const currencyValue = data?.data?.[currency]?.value;
+
+	if (!currencyValue) {
+		return value;
+	}
+
+	return Math.round(value / currencyValue);
+};
+
 export default function Home({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	const [type, setType] = useState<'hourly' | 'yearly'>('hourly');
+	const [currency, setCurrency] = useState<ExtendedCurrency>('BGN');
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
 	const [insurance, setInsurance] = useState<number | undefined>(3400);
@@ -62,15 +82,18 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 	const [advancedMode, setAdvancedMode] = useState(false);
 
 	const ratePerHour: number = useMemo(
-		() => Math.round(type === 'hourly' ? hourRate || 0 : !yearRate ? 0 : yearRate / hoursInMonth / 12),
+		() => Math.round(type === 'hourly' ? hourRate ?? 0 : !yearRate ? 0 : yearRate / hoursInMonth / 12),
 		[type, hourRate, yearRate, hoursInMonth]
 	);
 
-	const netSalary = useMemo(() => ratePerHour * hoursInMonth, [hoursInMonth, ratePerHour]);
+	const convertedRatePerHour = useMemo(
+		() => toBGN(currencyData, ratePerHour, currency),
+		[currency, currencyData, ratePerHour]
+	);
 
+	const netSalary = useMemo(() => convertedRatePerHour * hoursInMonth, [hoursInMonth, convertedRatePerHour]);
+	const expenses = useMemo(() => Math.round(netSalary / 100) * 25, [netSalary]);
 	const insuranceAmount = useMemo(() => (!insurance ? 0 : (insurance / 100) * 27.8), [insurance]);
-
-	const expenses = useMemo(() => (netSalary / 100) * 25, [netSalary]);
 
 	const quarterlyTaxGround = useMemo(
 		() => Math.round(netSalary * 3 - expenses * 3 - insuranceAmount * 3),
@@ -127,6 +150,8 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 					rel="stylesheet"
 					href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css"
 				/>
+
+				<title>Калкулатор за заплата на фрийлансър/контрактор | Atanas Atanasov | https://atanas.info</title>
 			</Head>
 
 			<a
@@ -172,15 +197,15 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							control={<Switch checked={type === 'hourly'} onChange={() => setType('hourly')} />}
 							label="С часова ставка"
+							control={<Switch checked={type === 'hourly'} onChange={() => setType('hourly')} />}
 						/>
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							control={<Switch checked={type === 'yearly'} onChange={() => setType('yearly')} />}
 							label="На годишна база"
+							control={<Switch checked={type === 'yearly'} onChange={() => setType('yearly')} />}
 						/>
 					</Grid>
 
@@ -191,7 +216,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 								<>
 									<Checkbox checked={advancedMode} onChange={() => setAdvancedMode(!advancedMode)} />
 
-									<Info text="При 8 (осем) часов работен ден на базата на 365 дни в годината минус 52 уикенда, 20 дни отпуск и 12 национални празника. (365 - 52*2 - 20 - 12) / 12 * 8" />
+									<Info text="При 8 часов работен ден на базата на 365 дни в годината минус 52 уикенда, 20 дни отпуск и 12 национални празника. (365 - 52*2 - 20 - 12) / 12 * 8" />
 								</>
 							}
 							labelPlacement="start"
@@ -200,21 +225,54 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				</Grid>
 
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
-					<Grid item xs={12} sm={6} md={4}>
+					<Grid item xs={12} sm={6} md={3}>
+						<FormControl fullWidth>
+							<InputLabel id="currency-select-label">Валута</InputLabel>
+
+							<Select
+								id="currency-select"
+								label="Валута"
+								value={currency}
+								onChange={e => setCurrency(e.target.value as ExtendedCurrency)}
+							>
+								<MenuItem value="BGN">BGN</MenuItem>
+								<MenuItem value="EUR">EUR</MenuItem>
+								<MenuItem value="USD">USD</MenuItem>
+								<MenuItem value="GBP">GBP</MenuItem>
+							</Select>
+						</FormControl>
+					</Grid>
+
+					<Grid item xs={12} sm={6} md={3}>
 						{type === 'hourly' && (
-							<Field label="Часова ставка" value={hourRate} suffix="лв." onChange={setHourRate} />
+							<Field
+								label="Часова ставка"
+								value={hourRate}
+								suffix={CurrencySymbol[currency]}
+								onChange={setHourRate}
+							/>
 						)}
 
 						{type === 'yearly' && (
-							<Field label="Годишна заплата" value={yearRate} suffix="лв." onChange={setYearRate} />
+							<Field
+								label="Годишна заплата"
+								value={yearRate}
+								suffix={CurrencySymbol[currency]}
+								onChange={setYearRate}
+							/>
 						)}
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={4}>
-						<Field label="Осигурителен праг" value={insurance} suffix="лв." onChange={setInsurance} />
+					<Grid item xs={12} sm={6} md={3}>
+						<Field
+							label="Осигурителен праг"
+							value={insurance}
+							suffix={CurrencySymbol.BGN}
+							onChange={setInsurance}
+						/>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={4}>
+					<Grid item xs={12} sm={6} md={3}>
 						<Field
 							label="Работни часове за един месец"
 							value={hoursInMonth}
@@ -234,34 +292,37 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 								<List>
 									<ListItem disableGutters>
-										<ListItemText primary="Брутна заплата: " secondary={`${netSalary} лв.`} />
+										<ListItemText
+											primary="Брутна заплата: "
+											secondary={`${netSalary} ${CurrencySymbol.BGN}`}
+										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Признати разходи (25%): "
-											secondary={`${expenses} лв.`}
+											secondary={`${expenses} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Осигуровки (27.8%): "
-											secondary={`${insuranceAmount} лв.`}
+											secondary={`${insuranceAmount} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данъчна основа за тримесечие: "
-											secondary={`${quarterlyTaxGround} лв.`}
+											secondary={`${quarterlyTaxGround} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данък за тримесечие: "
-											secondary={`${quarterlyTax} лв.`}
+											secondary={`${quarterlyTax} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 								</List>
@@ -273,10 +334,10 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 								<List>
 									<ListItem disableGutters>
 										<ListItemAvatar>
-											<Avatar>ЛВ</Avatar>
+											<Avatar>{CurrencySymbol.BGN.slice(0, 2)}</Avatar>
 										</ListItemAvatar>
 
-										<ListItemText primary="В лева" secondary={salary}></ListItemText>
+										<ListItemText primary="В лева" secondary={`${salary} ${CurrencySymbol.BGN}`} />
 									</ListItem>
 
 									<ListItem disableGutters>
@@ -286,8 +347,8 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 										<ListItemText
 											primary="В евро"
-											secondary={convert(currencyData, salary, 'EUR')}
-										></ListItemText>
+											secondary={`${CurrencySymbol.EUR} ${convert(currencyData, salary, 'EUR')}`}
+										/>
 									</ListItem>
 
 									<ListItem disableGutters>
@@ -297,8 +358,8 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 										<ListItemText
 											primary="В долари"
-											secondary={convert(currencyData, salary, 'USD')}
-										></ListItemText>
+											secondary={`${CurrencySymbol.USD} ${convert(currencyData, salary, 'USD')}`}
+										/>
 									</ListItem>
 
 									<ListItem disableGutters>
@@ -308,8 +369,8 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 										<ListItemText
 											primary="В британски лири"
-											secondary={convert(currencyData, salary, 'GBP')}
-										></ListItemText>
+											secondary={`${CurrencySymbol.GBP} ${convert(currencyData, salary, 'GBP')}`}
+										/>
 									</ListItem>
 
 									{currencyData?.meta?.last_updated_at && (
@@ -317,10 +378,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 											<Typography marginBottom={1} fontSize={12}>
 												<em>
 													Валутните курсове са обновени на{' '}
-													{format(
-														new Date(currencyData.meta.last_updated_at),
-														'dd MMM yyyy, HH:mm'
-													)}
+													{format(new Date(currencyData.meta.last_updated_at), 'dd MMM yyyy')}
 												</em>
 											</Typography>
 										</ListItem>
@@ -334,9 +392,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				)}
 			</Box>
 
-			<social-links
-				style={{ display: 'block', paddingBottom: '2rem', position: 'relative', zIndex: 2 }}
-			></social-links>
+			<social-links style={{ display: 'block', paddingBottom: '2rem', position: 'relative', zIndex: 2 }} />
 
 			<Script src="https://unpkg.com/scriptex-socials" />
 		</Container>
