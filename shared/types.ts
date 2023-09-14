@@ -3,7 +3,8 @@ export type Currency = 'EUR' | 'GBP' | 'USD';
 export enum CurrencySymbol {
 	EUR = '€',
 	GBP = '£',
-	USD = '$'
+	USD = '$',
+	BGN = 'лв.'
 }
 
 export type CurrencyData = {
