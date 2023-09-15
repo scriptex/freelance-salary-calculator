@@ -72,19 +72,34 @@ const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency)
 };
 
 export default function Home({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-	const [type, setType] = useState<'hourly' | 'yearly'>('hourly');
+	const [type, setType] = useState<'hourly' | 'yearly' | 'monthly'>('hourly');
 	const [currency, setCurrency] = useState<ExtendedCurrency>('BGN');
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
 	const [insurance, setInsurance] = useState<number | undefined>(3400);
+	const [monthlyRate, setMonthlyRate] = useState<number | undefined>();
 	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
 	const [hoursInMonth, setHoursInMonth] = useState(Math.round(((365 - 52 * 2 - 20 - 12) / 12) * 8));
 	const [advancedMode, setAdvancedMode] = useState(false);
 
-	const ratePerHour: number = useMemo(
-		() => Math.round(type === 'hourly' ? hourRate ?? 0 : !yearRate ? 0 : yearRate / hoursInMonth / 12),
-		[type, hourRate, yearRate, hoursInMonth]
-	);
+	const ratePerHour: number = useMemo(() => {
+		let result = 0;
+
+		switch (type) {
+			case 'hourly':
+				result = hourRate ?? 0;
+				break;
+
+			case 'monthly':
+				result = !monthlyRate ? 0 : monthlyRate / hoursInMonth;
+				break;
+
+			case 'yearly':
+				result = !yearRate ? 0 : yearRate / hoursInMonth / 12;
+		}
+
+		return Math.round(result);
+	}, [type, hourRate, yearRate, hoursInMonth, monthlyRate]);
 
 	const convertedRatePerHour = useMemo(
 		() => toBGN(currencyData, ratePerHour, currency),
@@ -190,36 +205,29 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
 					<Grid item xs={12} sm={6} md={3}>
 						<Typography>
-							База на калкулациите{' '}
-							<Info text="Възможни са два варианта: Калкулация базирана на часова ставка или на годишна база." />
+							Заплата:
+							<Info text="Възможни са три варианта: Калкулация базирана на заплащане на час, на база месечна заплата или на годишна база." />
 						</Typography>
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							label="С часова ставка"
+							label="На час"
 							control={<Switch checked={type === 'hourly'} onChange={() => setType('hourly')} />}
 						/>
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							label="На годишна база"
-							control={<Switch checked={type === 'yearly'} onChange={() => setType('yearly')} />}
+							label="На месец"
+							control={<Switch checked={type === 'monthly'} onChange={() => setType('monthly')} />}
 						/>
 					</Grid>
 
 					<Grid item xs={12} sm={6} md={3}>
 						<FormControlLabel
-							label="Редакция на работните часове за един месец"
-							control={
-								<>
-									<Checkbox checked={advancedMode} onChange={() => setAdvancedMode(!advancedMode)} />
-
-									<Info text="При 8 часов работен ден на базата на 365 дни в годината минус 52 уикенда, 20 дни отпуск и 12 национални празника. (365 - 52*2 - 20 - 12) / 12 * 8" />
-								</>
-							}
-							labelPlacement="start"
+							label="На година"
+							control={<Switch checked={type === 'yearly'} onChange={() => setType('yearly')} />}
 						/>
 					</Grid>
 				</Grid>
@@ -253,6 +261,15 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 							/>
 						)}
 
+						{type === 'monthly' && (
+							<Field
+								label="Месечна заплата"
+								value={monthlyRate}
+								suffix={CurrencySymbol[currency]}
+								onChange={setMonthlyRate}
+							/>
+						)}
+
 						{type === 'yearly' && (
 							<Field
 								label="Годишна заплата"
@@ -278,6 +295,20 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 							value={hoursInMonth}
 							disabled={!advancedMode}
 							onChange={setHoursInMonth}
+						/>
+					</Grid>
+
+					<Grid item xs={12} sm={12} md={12} justifyContent="flex-end" display="flex">
+						<FormControlLabel
+							label="Редакция на работните часове за един месец"
+							control={
+								<>
+									<Checkbox checked={advancedMode} onChange={() => setAdvancedMode(!advancedMode)} />
+
+									<Info text="При 8 часов работен ден на базата на 365 дни в годината минус 52 уикенда, 20 дни отпуск и 12 национални празника. (365 - 52*2 - 20 - 12) / 12 * 8" />
+								</>
+							}
+							labelPlacement="start"
 						/>
 					</Grid>
 				</Grid>
