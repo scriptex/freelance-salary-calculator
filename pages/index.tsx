@@ -425,7 +425,17 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 
 			<social-links style={{ display: 'block', paddingBottom: '2rem', position: 'relative', zIndex: 2 }} />
 
-			<Script src="https://unpkg.com/scriptex-socials" />
+			<Script src="https://www.googletagmanager.com/gtag/js?id=G-9BK5WF0JQK" />
+
+			<Script id="google-analytics">
+				{`
+					window.dataLayer = window.dataLayer || [];
+					function gtag(){dataLayer.push(arguments);}
+					gtag('js', new Date());
+
+					gtag('config', 'G-9BK5WF0JQK');
+				`}
+			</Script>
 		</Container>
 	);
 }
