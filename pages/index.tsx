@@ -47,6 +47,8 @@ export async function getServerSideProps(context?: unknown) {
 	}
 }
 
+const toFixed = (value: number, decimals = 2): string => value.toFixed(decimals);
+
 const convert = (data: CurrencyAPIData, value: number, currency: Currency): string => {
 	const currencyValue = data?.data?.[currency]?.value;
 
@@ -54,7 +56,7 @@ const convert = (data: CurrencyAPIData, value: number, currency: Currency): stri
 		return '';
 	}
 
-	return Math.round(value * currencyValue).toString();
+	return toFixed(value * currencyValue);
 };
 
 const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency): number => {
@@ -68,7 +70,7 @@ const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency)
 		return value;
 	}
 
-	return Math.round(value / currencyValue);
+	return value / currencyValue;
 };
 
 export default function Home({ isConnected }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -79,7 +81,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 	const [insurance, setInsurance] = useState<number | undefined>(3400);
 	const [monthlyRate, setMonthlyRate] = useState<number | undefined>();
 	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
-	const [hoursInMonth, setHoursInMonth] = useState(Math.round(((365 - 52 * 2 - 20 - 12) / 12) * 8));
+	const [hoursInMonth, setHoursInMonth] = useState(((365 - 52 * 2 - 20 - 12) / 12) * 8);
 	const [advancedMode, setAdvancedMode] = useState(false);
 
 	const ratePerHour: number = useMemo(() => {
@@ -98,7 +100,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				result = !yearRate ? 0 : yearRate / hoursInMonth / 12;
 		}
 
-		return Math.round(result);
+		return result;
 	}, [type, hourRate, yearRate, hoursInMonth, monthlyRate]);
 
 	const convertedRatePerHour = useMemo(
@@ -107,18 +109,18 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 	);
 
 	const netSalary = useMemo(() => convertedRatePerHour * hoursInMonth, [hoursInMonth, convertedRatePerHour]);
-	const expenses = useMemo(() => Math.round(netSalary / 100) * 25, [netSalary]);
+	const expenses = useMemo(() => (netSalary / 100) * 25, [netSalary]);
 	const insuranceAmount = useMemo(() => (!insurance ? 0 : (insurance / 100) * 27.8), [insurance]);
 
 	const quarterlyTaxGround = useMemo(
-		() => Math.round(netSalary * 3 - expenses * 3 - insuranceAmount * 3),
+		() => netSalary * 3 - expenses * 3 - insuranceAmount * 3,
 		[expenses, netSalary, insuranceAmount]
 	);
 
-	const quarterlyTax = useMemo(() => Math.round((quarterlyTaxGround / 100) * 10), [quarterlyTaxGround]);
+	const quarterlyTax = useMemo(() => (quarterlyTaxGround / 100) * 10, [quarterlyTaxGround]);
 
 	const salary = useMemo(
-		() => Math.round(netSalary - insuranceAmount - quarterlyTax / 3),
+		() => netSalary - insuranceAmount - quarterlyTax / 3,
 		[netSalary, quarterlyTax, insuranceAmount]
 	);
 
@@ -325,35 +327,35 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Брутна заплата: "
-											secondary={`${netSalary} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(netSalary)} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Признати разходи (25%): "
-											secondary={`${expenses} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(expenses)} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Осигуровки (27.8%): "
-											secondary={`${insuranceAmount} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(insuranceAmount)} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данъчна основа за тримесечие: "
-											secondary={`${quarterlyTaxGround} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(quarterlyTaxGround)} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данък за тримесечие: "
-											secondary={`${quarterlyTax} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(quarterlyTax)} ${CurrencySymbol.BGN}`}
 										/>
 									</ListItem>
 								</List>
@@ -368,7 +370,10 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 											<Avatar>{CurrencySymbol.BGN.slice(0, 2)}</Avatar>
 										</ListItemAvatar>
 
-										<ListItemText primary="В лева" secondary={`${salary} ${CurrencySymbol.BGN}`} />
+										<ListItemText
+											primary="В лева"
+											secondary={`${toFixed(salary)} ${CurrencySymbol.BGN}`}
+										/>
 									</ListItem>
 
 									<ListItem disableGutters>

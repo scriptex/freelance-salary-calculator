@@ -18,9 +18,8 @@
 		"url": "github:scriptex/freelance-salary-calculator"
 	},
 	"scripts": {
-		"dev": "yarn deduplicate && next dev",
 		"build": "yarn deduplicate && next build",
-		"start": "yarn deduplicate && next start",
+		"start": "yarn deduplicate && next dev",
 		"lint": "yarn deduplicate && next lint",
 		"prettier:ts": "prettier --write --list-different \"**/*.tsx\" \"**/*.ts\"",
 		"prettier:js": "prettier --write --list-different \"**/*.js\"",
