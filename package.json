@@ -46,7 +46,7 @@
 		"@babel/core": "7.23.0",
 		"@types/node": "20.8.2",
 		"@types/react": "18.2.25",
-		"@types/react-dom": "18.2.10",
+		"@types/react-dom": "18.2.11",
 		"eslint": "8.51.0",
 		"eslint-config-next": "13.5.4",
 		"prettier": "3.0.3",
