@@ -45,8 +45,8 @@
 	"devDependencies": {
 		"@babel/core": "7.23.0",
 		"@types/node": "20.8.4",
-		"@types/react": "18.2.25",
-		"@types/react-dom": "18.2.11",
+		"@types/react": "18.2.27",
+		"@types/react-dom": "18.2.12",
 		"eslint": "8.51.0",
 		"eslint-config-next": "13.5.4",
 		"prettier": "3.0.3",
@@ -54,7 +54,7 @@
 		"yarn-deduplicate": "6.0.2"
 	},
 	"resolutions": {
-		"@types/react": "18.2.25"
+		"@types/react": "18.2.27"
 	},
 	"private": true
 }
