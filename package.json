@@ -35,7 +35,7 @@
 		"@mui/material": "5.14.13",
 		"date-fns": "2.30.0",
 		"mongodb": "6.1.0",
-		"next": "13.5.4",
+		"next": "13.5.5",
 		"next-pwa": "5.6.0",
 		"normalize.css": "8.0.1",
 		"react": "18.2.0",
@@ -48,7 +48,7 @@
 		"@types/react": "18.2.28",
 		"@types/react-dom": "18.2.13",
 		"eslint": "8.51.0",
-		"eslint-config-next": "13.5.4",
+		"eslint-config-next": "13.5.5",
 		"prettier": "3.0.3",
 		"typescript": "5.2.2",
 		"yarn-deduplicate": "6.0.2"
