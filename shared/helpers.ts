@@ -1,5 +1,5 @@
-import isAfter from 'date-fns/isAfter';
-import addHours from 'date-fns/addHours';
+import { isAfter } from 'date-fns/isAfter';
+import { addHours } from 'date-fns/addHours';
 
 export function shouldRequestFreshData(timestamp?: string): boolean {
 	if (!timestamp) {
