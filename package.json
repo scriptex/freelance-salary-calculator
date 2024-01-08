@@ -53,8 +53,5 @@
 		"typescript": "5.3.3",
 		"yarn-deduplicate": "6.0.2"
 	},
-	"resolutions": {
-		"@types/react": "18.2.46"
-	},
 	"private": true
 }
