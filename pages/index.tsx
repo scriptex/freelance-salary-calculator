@@ -1,4 +1,4 @@
-import format from 'date-fns/format';
+import { format } from 'date-fns/format';
 import { useEffect, useState, useMemo } from 'react';
 
 import Head from 'next/head';
