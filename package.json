@@ -50,7 +50,7 @@
 		"eslint": "9.10.0",
 		"eslint-config-next": "14.2.8",
 		"prettier": "3.3.3",
-		"typescript": "5.5.4",
+		"typescript": "5.6.2",
 		"yarn-deduplicate": "6.0.2"
 	},
 	"private": true
