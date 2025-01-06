@@ -1,5 +1,7 @@
-declare namespace JSX {
-	interface IntrinsicElements {
-		'social-links': any;
+declare module React {
+	namespace JSX {
+		interface IntrinsicElements {
+			'social-links': any;
+		}
 	}
 }

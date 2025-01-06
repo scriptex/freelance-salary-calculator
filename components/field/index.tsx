@@ -23,7 +23,7 @@ export const Field: FC<Readonly<Props>> = ({ label, value, suffix, disabled = fa
 				suffix
 					? {
 							endAdornment: <InputAdornment position="end">{suffix}</InputAdornment>
-					  }
+						}
 					: {}
 			}
 		/>
