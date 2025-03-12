@@ -31,8 +31,8 @@
 		"@emotion/react": "11.14.0",
 		"@emotion/styled": "11.14.0",
 		"@fontsource/roboto": "5.1.1",
-		"@mui/icons-material": "6.4.6",
-		"@mui/material": "6.4.6",
+		"@mui/icons-material": "6.4.7",
+		"@mui/material": "6.4.7",
 		"date-fns": "4.1.0",
 		"mongodb": "6.13.1",
 		"next": "15.1.7",
@@ -43,13 +43,13 @@
 		"scriptex-socials": "1.8.0"
 	},
 	"devDependencies": {
-		"@babel/core": "7.26.9",
-		"@types/node": "22.13.5",
+		"@babel/core": "7.26.10",
+		"@types/node": "22.13.10",
 		"@types/react": "19.0.10",
 		"@types/react-dom": "19.0.4",
 		"eslint": "9.21.0",
 		"eslint-config-next": "15.1.7",
-		"prettier": "3.5.2",
+		"prettier": "3.5.3",
 		"typescript": "5.7.3",
 		"yarn-deduplicate": "6.0.2"
 	},
