@@ -78,7 +78,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 	const [currency, setCurrency] = useState<ExtendedCurrency>('BGN');
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
-	const [insurance, setInsurance] = useState<number | undefined>(3750);
+	const [insurance, setInsurance] = useState<number | undefined>(4130);
 	const [monthlyRate, setMonthlyRate] = useState<number | undefined>();
 	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
 	const [hoursInMonth, setHoursInMonth] = useState(((365 - 52 * 2 - 20 - 12) / 12) * 8);
