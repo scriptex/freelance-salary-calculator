@@ -205,28 +205,28 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				</Typography>
 
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<Typography>
 							Заплата:
 							<Info text="Възможни са три варианта: Калкулация базирана на заплащане на час, на база месечна заплата или на годишна база." />
 						</Typography>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<FormControlLabel
 							label="На час"
 							control={<Switch checked={type === 'hourly'} onChange={() => setType('hourly')} />}
 						/>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<FormControlLabel
 							label="На месец"
 							control={<Switch checked={type === 'monthly'} onChange={() => setType('monthly')} />}
 						/>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<FormControlLabel
 							label="На година"
 							control={<Switch checked={type === 'yearly'} onChange={() => setType('yearly')} />}
@@ -235,7 +235,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				</Grid>
 
 				<Grid container spacing={2} alignItems="center" marginBottom={5}>
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<FormControl fullWidth>
 							<InputLabel id="currency-select-label">Валута</InputLabel>
 
@@ -253,7 +253,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 						</FormControl>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						{type === 'hourly' && (
 							<Field
 								label="Часова ставка"
@@ -282,7 +282,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 						)}
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<Field
 							label="Осигурителен праг"
 							value={insurance}
@@ -291,7 +291,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 						/>
 					</Grid>
 
-					<Grid item xs={12} sm={6} md={3}>
+					<Grid size={{ xs: 12, sm: 6, md: 3 }}>
 						<Field
 							label="Работни часове за един месец"
 							value={hoursInMonth}
@@ -300,7 +300,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 						/>
 					</Grid>
 
-					<Grid item xs={12} sm={12} md={12} justifyContent="flex-end" display="flex">
+					<Grid size={{ xs: 12, sm: 12, md: 12 }} justifyContent="flex-end" display="flex">
 						<FormControlLabel
 							label="Редакция на работните часове за един месец"
 							control={
@@ -320,7 +320,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 				{!ratePerHour ? null : (
 					<>
 						<Grid container spacing={2} marginBottom={2}>
-							<Grid item xs={12} sm={6}>
+							<Grid size={{ xs: 12, sm: 6 }}>
 								<Typography variant="h5">Резултати</Typography>
 
 								<List>
@@ -361,7 +361,7 @@ export default function Home({ isConnected }: InferGetServerSidePropsType<typeof
 								</List>
 							</Grid>
 
-							<Grid item xs={12} sm={6}>
+							<Grid size={{ xs: 12, sm: 6 }}>
 								<Typography variant="h5">Остатък на месец:</Typography>
 
 								<List>
