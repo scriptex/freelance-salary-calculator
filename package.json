@@ -47,9 +47,9 @@
 		"@types/node": "22.15.33",
 		"@types/react": "19.1.8",
 		"@types/react-dom": "19.1.6",
-		"eslint": "9.28.0",
+		"eslint": "9.29.0",
 		"eslint-config-next": "15.3.4",
-		"prettier": "3.5.3",
+		"prettier": "3.6.1",
 		"typescript": "5.8.3",
 		"yarn-deduplicate": "6.0.2"
 	},
