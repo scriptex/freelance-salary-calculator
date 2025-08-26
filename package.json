@@ -43,10 +43,10 @@
 		"scriptex-socials": "1.9.1"
 	},
 	"devDependencies": {
-		"@babel/core": "7.28.0",
+		"@babel/core": "7.28.3",
 		"@types/node": "22.18.0",
-		"@types/react": "19.1.10",
-		"@types/react-dom": "19.1.7",
+		"@types/react": "19.1.11",
+		"@types/react-dom": "19.1.8",
 		"eslint": "9.34.0",
 		"eslint-config-next": "15.5.0",
 		"prettier": "3.6.2",
