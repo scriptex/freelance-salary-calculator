@@ -1,22 +1,25 @@
-name: Build
+name: 'Code quality & Build'
 
-on: [push, pull_request]
+on:
+    workflow_dispatch:
+    push:
 
 jobs:
     build:
         runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                node-version: [lts/*]
-
         steps:
             - uses: actions/checkout@v5
-            - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v6
+            - uses: actions/setup-node@v6
               with:
-                  node-version: ${{ matrix.node-version }}
-            - run: yarn
-            - run: yarn lint
-            - run: yarn tsc
-            - run: yarn build
+                  node-version: lts/*
+            - name: Build
+              run: |
+                  node -v
+                  yarn
+                  yarn lint
+                  yarn tsc
+                  yarn build
+              env:
+                  CURRENCY_API_ENPOINT_TOKEN: ${{ secrets.CURRENCY_API_ENPOINT_TOKEN }}
+                  MONGODB_URI: ${{ secrets.MONGODB_URI }}
