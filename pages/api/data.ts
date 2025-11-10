@@ -1,6 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 import clientPromise from 'lib/mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { API_REQUEST_URL, CurrencyAPIData, shouldRequestFreshData } from 'shared';
 
 export default async function handler(_: NextApiRequest, res: NextApiResponse<CurrencyAPIData>) {
@@ -17,8 +16,8 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse<Cu
 
 		const document = {
 			...apiData,
-			type: 'apiData',
-			timestamp: new Date().toISOString()
+			timestamp: new Date().toISOString(),
+			type: 'apiData'
 		};
 
 		if (!data) {

@@ -1,0 +1,25 @@
+name: 'Code quality & Build'
+
+on:
+    workflow_dispatch:
+    push:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v5
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: lts/*
+            - name: Build
+              run: |
+                  node -v
+                  yarn
+                  yarn lint
+                  yarn tsc
+                  yarn build
+              env:
+                  CURRENCY_API_ENPOINT_TOKEN: ${{ secrets.CURRENCY_API_ENPOINT_TOKEN }}
+                  MONGODB_URI: ${{ secrets.MONGODB_URI }}

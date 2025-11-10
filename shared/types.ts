@@ -13,10 +13,10 @@ export type CurrencyData = {
 };
 
 export type CurrencyAPIData = {
+	data?: Record<Currency, CurrencyData>;
 	meta?: {
 		last_updated_at?: string;
 	};
-	type?: 'apiData';
-	data?: Record<Currency, CurrencyData>;
 	timestamp?: string;
+	type?: 'apiData';
 };

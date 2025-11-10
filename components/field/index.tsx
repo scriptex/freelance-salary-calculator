@@ -1,31 +1,32 @@
-import TextField from '@mui/material/TextField';
+import type { ChangeEvent, FC, ReactNode } from 'react';
+
 import InputAdornment from '@mui/material/InputAdornment';
-import type { FC, ChangeEvent } from 'react';
+import TextField from '@mui/material/TextField';
 
 type Props = {
-	label: string;
-	value?: number;
-	suffix?: string;
 	disabled?: boolean;
+	label: string;
 	onChange: (value: number) => void;
+	suffix?: ReactNode;
+	value?: number;
 };
 
-export const Field: FC<Readonly<Props>> = ({ label, value, suffix, disabled = false, onChange }: Props) => (
+export const Field: FC<Readonly<Props>> = ({ disabled = false, label, onChange, suffix, value }: Props) => (
 	<div>
 		<TextField
-			type="number"
-			label={label}
-			value={isNaN(value as unknown as number) ? '' : value}
-			fullWidth
 			disabled={disabled}
-			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(parseInt(e.target.value, 10))}
-			InputProps={
-				suffix
+			fullWidth
+			label={label}
+			onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(parseFloat(e.target.value))}
+			slotProps={{
+				input: suffix
 					? {
 							endAdornment: <InputAdornment position="end">{suffix}</InputAdornment>
 						}
 					: {}
-			}
+			}}
+			type="number"
+			value={isNaN(value as unknown as number) ? '' : value}
 		/>
 	</div>
 );

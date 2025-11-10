@@ -1,4 +1,5 @@
-import { MongoClient, MongoClientOptions, ServerApiVersion } from 'mongodb';
+import type { MongoClientOptions } from 'mongodb';
+import { MongoClient, ServerApiVersion } from 'mongodb';
 
 if (!process.env.MONGODB_URI) {
 	throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
