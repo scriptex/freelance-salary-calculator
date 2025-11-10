@@ -1,5 +1,4 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
-import { fixupPluginRules } from '@eslint/compat';
 import js from '@eslint/js';
 
 import path from 'node:path';
