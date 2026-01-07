@@ -67,7 +67,7 @@ export default defineConfig([
 				{
 					type: 'natural',
 					order: 'asc',
-					newlinesBetween: 'always',
+					newlinesBetween: 1,
 					groups: ['builtin', 'react', 'reactEcoystem', 'external', 'internal'],
 					customGroups: [
 						...Object.entries({
