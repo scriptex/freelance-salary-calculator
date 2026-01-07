@@ -26,7 +26,7 @@ export const Field: FC<Readonly<Props>> = ({ disabled = false, label, onChange, 
 					: {}
 			}}
 			type="number"
-			value={isNaN(value as unknown as number) ? '' : value}
+			value={Number.isNaN(value as unknown as number) ? '' : value}
 		/>
 	</div>
 );

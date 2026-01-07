@@ -1,11 +1,16 @@
-export type Currency = 'EUR' | 'GBP' | 'USD';
-
 export enum CurrencySymbol {
+	AUD = 'A$',
+	CAD = 'C$',
+	CHF = '₣',
+	CNY = '¥',
 	EUR = '€',
 	GBP = '£',
-	USD = '$',
-	BGN = 'лв.'
+	// eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+	JPY = '¥',
+	USD = '$'
 }
+
+export type Currency = keyof typeof CurrencySymbol;
 
 export type CurrencyData = {
 	code: Currency;
