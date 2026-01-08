@@ -2,11 +2,10 @@ export enum CurrencySymbol {
 	AUD = 'A$',
 	CAD = 'C$',
 	CHF = '₣',
-	CNY = '¥',
+	CNY = 'CN¥',
 	EUR = '€',
 	GBP = '£',
-	// eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
-	JPY = '¥',
+	JPY = 'JP¥',
 	USD = '$'
 }
 
