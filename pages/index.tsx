@@ -24,9 +24,7 @@ import clientPromise from 'lib/mongodb';
 import Head from 'next/head';
 import Image from 'next/image';
 import Script from 'next/script';
-import { Currency, CurrencyAPIData, CurrencySymbol } from 'shared';
-
-type ExtendedCurrency = 'BGN' | Currency;
+import { BASE_CURRENCY, Currency, CurrencyAPIData, CurrencySymbol } from 'shared';
 
 export async function getServerSideProps() {
 	try {
@@ -47,17 +45,21 @@ export async function getServerSideProps() {
 const toFixed = (value: number, decimals = 2): string => value.toFixed(decimals);
 
 const convert = (data: CurrencyAPIData, value: number, currency: Currency): string => {
+	if (currency === 'EUR') {
+		return toFixed(value);
+	}
+
 	const currencyValue = data?.data?.[currency]?.value;
 
 	if (!currencyValue) {
-		return '';
+		return toFixed(value);
 	}
 
 	return toFixed(value * currencyValue);
 };
 
-const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency): number => {
-	if (currency === 'BGN') {
+const toEUR = (data: CurrencyAPIData, value: number, currency: Currency): number => {
+	if (currency === 'EUR') {
 		return value;
 	}
 
@@ -70,12 +72,23 @@ const toBGN = (data: CurrencyAPIData, value: number, currency: ExtendedCurrency)
 	return value / currencyValue;
 };
 
+const currencyName: Record<Currency, string> = {
+	AUD: 'В австралийски долари',
+	CAD: 'В канадски долари',
+	CHF: 'В швейцарски франкове',
+	CNY: 'В китайски юани',
+	EUR: 'В евро',
+	GBP: 'В британски лири',
+	JPY: 'В японски йени',
+	USD: 'В американски долари'
+};
+
 export default function Home() {
 	const [type, setType] = useState<'hourly' | 'monthly' | 'yearly'>('hourly');
-	const [currency, setCurrency] = useState<ExtendedCurrency>('BGN');
+	const [currency, setCurrency] = useState<Currency>(BASE_CURRENCY);
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
-	const [insurance, setInsurance] = useState<number | undefined>(4130);
+	const [insurance, setInsurance] = useState<number | undefined>(2111.64);
 	const [monthlyRate, setMonthlyRate] = useState<number | undefined>();
 	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
 	const [hoursInMonth, setHoursInMonth] = useState(((365 - 52 * 2 - 20 - 12) / 12) * 8);
@@ -102,19 +115,21 @@ export default function Home() {
 	}, [type, hourRate, yearRate, hoursInMonth, monthlyRate]);
 
 	const convertedRatePerHour = useMemo(
-		() => toBGN(currencyData, ratePerHour, currency),
+		() => toEUR(currencyData, ratePerHour, currency),
 		[currency, currencyData, ratePerHour]
 	);
 
 	const netSalary = useMemo(() => convertedRatePerHour * hoursInMonth, [hoursInMonth, convertedRatePerHour]);
+
 	const expenses = useMemo(() => (netSalary / 100) * 25, [netSalary]);
+
 	const insuranceAmount = useMemo(
 		() => (!insurance ? 0 : (insurance / 100) * insuranceRate),
 		[insurance, insuranceRate]
 	);
 
 	const quarterlyTaxGround = useMemo(
-		() => netSalary * 3 - expenses * 3 - insuranceAmount * 3,
+		() => (netSalary - expenses - insuranceAmount) * 3,
 		[expenses, netSalary, insuranceAmount]
 	);
 
@@ -260,13 +275,14 @@ export default function Home() {
 							<Select
 								id="currency-select"
 								label="Валута"
-								onChange={e => setCurrency(e.target.value as ExtendedCurrency)}
+								onChange={e => setCurrency(e.target.value)}
 								value={currency}
 							>
-								<MenuItem value="BGN">BGN</MenuItem>
-								<MenuItem value="EUR">EUR</MenuItem>
-								<MenuItem value="USD">USD</MenuItem>
-								<MenuItem value="GBP">GBP</MenuItem>
+								{Object.keys(CurrencySymbol).map(key => (
+									<MenuItem key={key} value={key}>
+										{key} (<small>{currencyName[key as Currency].replace('В ', '')}</small>)
+									</MenuItem>
+								))}
 							</Select>
 						</FormControl>
 					</Grid>
@@ -305,7 +321,7 @@ export default function Home() {
 							disabled={!advancedMode}
 							label="Осигурителен праг"
 							onChange={setInsurance}
-							suffix={CurrencySymbol.BGN}
+							suffix={CurrencySymbol.EUR}
 							value={insurance}
 						/>
 					</Grid>
@@ -346,35 +362,35 @@ export default function Home() {
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Брутна заплата: "
-											secondary={`${toFixed(netSalary)} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(netSalary)} ${CurrencySymbol.EUR}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Признати разходи (25%): "
-											secondary={`${toFixed(expenses)} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(expenses)} ${CurrencySymbol.EUR}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Осигуровки (27.8%): "
-											secondary={`${toFixed(insuranceAmount)} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(insuranceAmount)} ${CurrencySymbol.EUR}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данъчна основа за тримесечие: "
-											secondary={`${toFixed(quarterlyTaxGround)} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(quarterlyTaxGround)} ${CurrencySymbol.EUR}`}
 										/>
 									</ListItem>
 
 									<ListItem disableGutters>
 										<ListItemText
 											primary="Данък за тримесечие: "
-											secondary={`${toFixed(quarterlyTax)} ${CurrencySymbol.BGN}`}
+											secondary={`${toFixed(quarterlyTax)} ${CurrencySymbol.EUR}`}
 										/>
 									</ListItem>
 								</List>
@@ -384,49 +400,18 @@ export default function Home() {
 								<Typography variant="h5">Остатък на месец:</Typography>
 
 								<List>
-									<ListItem disableGutters>
-										<ListItemAvatar>
-											<Avatar>{CurrencySymbol.BGN.slice(0, 2)}</Avatar>
-										</ListItemAvatar>
+									{Object.keys(CurrencySymbol).map(symbol => (
+										<ListItem disableGutters key={symbol}>
+											<ListItemAvatar>
+												<Avatar>{CurrencySymbol[symbol as Currency]}</Avatar>
+											</ListItemAvatar>
 
-										<ListItemText
-											primary="В лева"
-											secondary={`${toFixed(salary)} ${CurrencySymbol.BGN}`}
-										/>
-									</ListItem>
-
-									<ListItem disableGutters>
-										<ListItemAvatar>
-											<Avatar>{CurrencySymbol.EUR}</Avatar>
-										</ListItemAvatar>
-
-										<ListItemText
-											primary="В евро"
-											secondary={`${CurrencySymbol.EUR} ${convert(currencyData, salary, 'EUR')}`}
-										/>
-									</ListItem>
-
-									<ListItem disableGutters>
-										<ListItemAvatar>
-											<Avatar>{CurrencySymbol.USD}</Avatar>
-										</ListItemAvatar>
-
-										<ListItemText
-											primary="В долари"
-											secondary={`${CurrencySymbol.USD} ${convert(currencyData, salary, 'USD')}`}
-										/>
-									</ListItem>
-
-									<ListItem disableGutters>
-										<ListItemAvatar>
-											<Avatar>{CurrencySymbol.GBP}</Avatar>
-										</ListItemAvatar>
-
-										<ListItemText
-											primary="В британски лири"
-											secondary={`${CurrencySymbol.GBP} ${convert(currencyData, salary, 'GBP')}`}
-										/>
-									</ListItem>
+											<ListItemText
+												primary={currencyName[symbol as Currency]}
+												secondary={`${CurrencySymbol[symbol as Currency]} ${convert(currencyData, salary, symbol as Currency)}`}
+											/>
+										</ListItem>
+									))}
 
 									{currencyData?.meta?.last_updated_at && (
 										<ListItem disableGutters>

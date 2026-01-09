@@ -1,11 +1,15 @@
-export type Currency = 'EUR' | 'GBP' | 'USD';
-
 export enum CurrencySymbol {
+	AUD = 'A$',
+	CAD = 'C$',
+	CHF = '₣',
+	CNY = 'CN¥',
 	EUR = '€',
 	GBP = '£',
-	USD = '$',
-	BGN = 'лв.'
+	JPY = 'JP¥',
+	USD = '$'
 }
+
+export type Currency = keyof typeof CurrencySymbol;
 
 export type CurrencyData = {
 	code: Currency;
