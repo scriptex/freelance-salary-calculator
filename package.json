@@ -53,11 +53,11 @@
 		"eslint": "9.39.2",
 		"eslint-config-next": "16.1.4",
 		"eslint-config-prettier": "10.1.8",
-		"eslint-plugin-perfectionist": "5.3.1",
+		"eslint-plugin-perfectionist": "5.4.0",
 		"eslint-plugin-react": "7.37.5",
 		"eslint-plugin-react-hooks": "7.0.1",
 		"minimatch": "10.1.1",
-		"prettier": "3.7.4",
+		"prettier": "3.8.1",
 		"typescript": "5.9.3",
 		"yarn-deduplicate": "6.0.2"
 	},
