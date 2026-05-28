@@ -59,7 +59,7 @@
 		"eslint-plugin-react-hooks": "7.1.1",
 		"minimatch": "10.2.5",
 		"prettier": "3.8.3",
-		"typescript": "5.9.3",
+		"typescript": "6.0.3",
 		"yarn-deduplicate": "6.0.2"
 	},
 	"private": true
