@@ -20,11 +20,12 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { Field, Info } from 'components';
 import { format } from 'date-fns/format';
-import clientPromise from '../lib/mongodb';
 import Head from 'next/head';
 import Image from 'next/image';
 import Script from 'next/script';
 import { BASE_CURRENCY, Currency, CurrencyAPIData, CurrencySymbol } from 'shared';
+
+import clientPromise from '../lib/mongodb';
 
 export async function getServerSideProps() {
 	try {
@@ -197,9 +198,9 @@ export default function Home() {
 			</a>
 
 			<Box
-				sx={{ mt: 10 }}
-				style={{ minHeight: 'calc(100vh - 9.75rem)', position: 'relative', zIndex: 2 }}
 				component="div"
+				style={{ minHeight: 'calc(100vh - 9.75rem)', position: 'relative', zIndex: 2 }}
+				sx={{ mt: 10 }}
 			>
 				<Typography sx={{ mb: 1, textAlign: 'center' }} variant="h4">
 					Калкулатор за заплата на фрийлансър/контрактор
@@ -220,7 +221,7 @@ export default function Home() {
 
 				<Divider style={{ margin: '3rem 0' }} />
 
-				<Grid container spacing={2} sx={{ display: 'flex', mb: 2, justifyContent: 'space-between' }}>
+				<Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
 					<Grid size={{ md: 6, sm: 12, xs: 12 }}>
 						<Typography sx={{ mb: 2 }} variant="h5">
 							Входни данни:
@@ -241,7 +242,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 
-				<Grid sx={{ alignItems: 'center', mb: 5 }} container spacing={2}>
+				<Grid container spacing={2} sx={{ alignItems: 'center', mb: 5 }}>
 					<Grid size={{ md: 3, sm: 6, xs: 12 }}>
 						<Typography>
 							Заплата:
@@ -271,7 +272,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 
-				<Grid sx={{ alignItems: 'center', mb: 5 }} container spacing={2}>
+				<Grid container spacing={2} sx={{ alignItems: 'center', mb: 5 }}>
 					<Grid size={{ md: 3, sm: 6, xs: 12 }}>
 						<FormControl fullWidth>
 							<InputLabel id="currency-select-label">Валута</InputLabel>
@@ -343,7 +344,7 @@ export default function Home() {
 					</Grid>
 
 					{advancedMode && (
-						<Grid sx={{ justifySelf: 'flex-end' }} size={{ md: 2, sm: 6, xs: 12 }}>
+						<Grid size={{ md: 2, sm: 6, xs: 12 }} sx={{ justifySelf: 'flex-end' }}>
 							<Field
 								label="Осигурителни вноски"
 								onChange={setInsuranceRate}
@@ -358,7 +359,7 @@ export default function Home() {
 
 				{!ratePerHour ? null : (
 					<>
-						<Grid container sx={{ mb: 2 }} spacing={2}>
+						<Grid container spacing={2} sx={{ mb: 2 }}>
 							<Grid size={{ sm: 6, xs: 12 }}>
 								<Typography variant="h5">Резултати</Typography>
 
