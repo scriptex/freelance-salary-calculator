@@ -1,4 +1,4 @@
-import clientPromise from 'lib/mongodb';
+import clientPromise from '../../lib/mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { API_REQUEST_URL, CurrencyAPIData, shouldRequestFreshData } from 'shared';
 
