@@ -20,11 +20,12 @@ import Switch from '@mui/material/Switch';
 import Typography from '@mui/material/Typography';
 import { Field, Info } from 'components';
 import { format } from 'date-fns/format';
-import clientPromise from 'lib/mongodb';
 import Head from 'next/head';
 import Image from 'next/image';
 import Script from 'next/script';
 import { BASE_CURRENCY, Currency, CurrencyAPIData, CurrencySymbol } from 'shared';
+
+import clientPromise from '../lib/mongodb';
 
 export async function getServerSideProps() {
 	try {
@@ -88,7 +89,7 @@ export default function Home() {
 	const [currency, setCurrency] = useState<Currency>(BASE_CURRENCY);
 	const [hourRate, setHourRate] = useState<number | undefined>();
 	const [yearRate, setYearRate] = useState<number | undefined>();
-	const [insurance, setInsurance] = useState<number | undefined>(2111.64);
+	const [insurance, setInsurance] = useState<number | undefined>(2300);
 	const [monthlyRate, setMonthlyRate] = useState<number | undefined>();
 	const [currencyData, setCurrencyData] = useState<CurrencyAPIData>({});
 	const [hoursInMonth, setHoursInMonth] = useState(((365 - 52 * 2 - 20 - 12) / 12) * 8);
@@ -196,12 +197,16 @@ export default function Home() {
 				See code on Github
 			</a>
 
-			<Box marginTop={10} style={{ minHeight: 'calc(100vh - 9.75rem)', position: 'relative', zIndex: 2 }}>
-				<Typography marginBottom={1} textAlign="center" variant="h4">
+			<Box
+				component="div"
+				style={{ minHeight: 'calc(100vh - 9.75rem)', position: 'relative', zIndex: 2 }}
+				sx={{ mt: 10 }}
+			>
+				<Typography sx={{ mb: 1, textAlign: 'center' }} variant="h4">
 					Калкулатор за заплата на фрийлансър/контрактор
 				</Typography>
 
-				<Typography marginBottom={10} textAlign="center">
+				<Typography sx={{ mb: 10, textAlign: 'center' }}>
 					<em>
 						според Българското законодателство и{' '}
 						<Link
@@ -216,9 +221,9 @@ export default function Home() {
 
 				<Divider style={{ margin: '3rem 0' }} />
 
-				<Grid container display="flex" justifyContent="space-between" marginBottom={2} spacing={2}>
+				<Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
 					<Grid size={{ md: 6, sm: 12, xs: 12 }}>
-						<Typography marginBottom={2} variant="h5">
+						<Typography sx={{ mb: 2 }} variant="h5">
 							Входни данни:
 						</Typography>
 					</Grid>
@@ -237,7 +242,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 
-				<Grid alignItems="center" container marginBottom={5} spacing={2}>
+				<Grid container spacing={2} sx={{ alignItems: 'center', mb: 5 }}>
 					<Grid size={{ md: 3, sm: 6, xs: 12 }}>
 						<Typography>
 							Заплата:
@@ -267,7 +272,7 @@ export default function Home() {
 					</Grid>
 				</Grid>
 
-				<Grid alignItems="center" container marginBottom={5} spacing={2}>
+				<Grid container spacing={2} sx={{ alignItems: 'center', mb: 5 }}>
 					<Grid size={{ md: 3, sm: 6, xs: 12 }}>
 						<FormControl fullWidth>
 							<InputLabel id="currency-select-label">Валута</InputLabel>
@@ -339,7 +344,7 @@ export default function Home() {
 					</Grid>
 
 					{advancedMode && (
-						<Grid justifySelf="flex-end" size={{ md: 2, sm: 6, xs: 12 }}>
+						<Grid size={{ md: 2, sm: 6, xs: 12 }} sx={{ justifySelf: 'flex-end' }}>
 							<Field
 								label="Осигурителни вноски"
 								onChange={setInsuranceRate}
@@ -354,7 +359,7 @@ export default function Home() {
 
 				{!ratePerHour ? null : (
 					<>
-						<Grid container marginBottom={2} spacing={2}>
+						<Grid container spacing={2} sx={{ mb: 2 }}>
 							<Grid size={{ sm: 6, xs: 12 }}>
 								<Typography variant="h5">Резултати</Typography>
 
@@ -415,7 +420,7 @@ export default function Home() {
 
 									{currencyData?.meta?.last_updated_at && (
 										<ListItem disableGutters>
-											<Typography fontSize={12} marginBottom={1}>
+											<Typography sx={{ fontSize: 12, mb: 1 }}>
 												<em>
 													Валутните курсове са обновени на{' '}
 													{format(new Date(currencyData.meta.last_updated_at), 'dd MMM yyyy')}
